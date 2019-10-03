@@ -5,13 +5,11 @@ import { ProductDto } from './dto/create-product.dto';
 @Controller('products')
 export class ProductsController {
 
-    private logger = new Logger("ProductsController");
-
     constructor(private readonly productsService: ProductsService) { }
 
     @Get()
     async findAll() {
-        return await this.productsService.findAll();
+        return await this .productsService.findAll();
     }
 
     @Get(':id')
@@ -20,7 +18,7 @@ export class ProductsController {
     }
 
     @Post()
-    async create(@Body() productDto: ProductDto) {
+    async create(@Body()productDto: ProductDto): Promise<any> {
         return await this.productsService.create(productDto);
     }
 

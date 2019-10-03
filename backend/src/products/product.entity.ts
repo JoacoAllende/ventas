@@ -12,5 +12,8 @@ export class ProductEntity {
   price: number;
 
   @Column("decimal", { precision: 2, scale: 2 })
-  tasa: number;
+  rate: number;
+
+  @Column("varchar", {length: 50})
+  code: string;
 }

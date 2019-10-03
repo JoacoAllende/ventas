@@ -1,0 +1,67 @@
+<div class="container">
+    <h1 class="text-center">PRODUCTOS</h1>
+    <div class="container">
+        <div *ngIf="search">
+            <div class="col-md-6 form-group">
+                <input type="text" placeholder="Ingresar Código" [(ngModel)]="searchCode">
+            </div>
+            <div class="col-md-6 form-group">
+                <input type="text" placeholder="Ingresar Descripción" [(ngModel)]="searchDescription">
+            </div>
+            <button type="submit" class="btn btn-default pull-right" (click)="enableInitial()">Salir</button>
+        </div>
+        <table class="table" id="productTable">
+            <thead class="text-center">
+                <th (click)="setOrder('code')" class="pointer">Código</th>
+                <th (click)="setOrder('description')" class="pointer">Descripción</th>
+                <th (click)="setOrder('price')" class="pointer">Precio</th>
+                <th>Tasa</th>
+                <th *ngIf="edition">Editar</th>
+                <th *ngIf="edition">Eliminar</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let product of products | orderBy: order:reverse:'case-insensitive' | codeFilter:searchCode | descriptionFilter:searchDescription| paginate: { itemsPerPage: 10, currentPage: actualPage}">
+                    <td>{{product.code}}</td>
+                    <td>{{product.description}}</td>
+                    <td>{{product.price  | number : '1.2-2'}}</td>
+                    <td>{{product.rate}}</td>
+                    <td><a (click)="editProduct(product)" *ngIf="edition">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                    </a></td>
+                    <td><a (click)="deleteProduct(product.id)" *ngIf="edition">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </a></td>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls (pageChange)="actualPage = $event"></pagination-controls>
+    </div>
+    <form role="form" #productForm="ngForm" name='productForm' *ngIf="edition">
+        <input type="hidden" name="id" [(ngModel)]="productService.selectedProduct.id" #id="ngModel" >
+        <div class="form-group">
+            <label for="Code">Código</label>
+            <input type="text" class="form-control" name="code" [(ngModel)]="productService.selectedProduct.code" #code="ngModel" 
+                placeholder="Codigo" required="required">
+        </div>
+        <div class="form-group">
+            <label for="Description">Descripción</label>
+            <input type="text" class="form-control" name="description" [(ngModel)]="productService.selectedProduct.description" #description="ngModel" required
+                placeholder="Descripcion">
+        </div>
+        <div class="form-group">
+            <label for="Price">Precio</label>
+            <input type="number" class="form-control" name="price" [(ngModel)]="productService.selectedProduct.price" #price="ngModel" required
+                placeholder="Precio">
+        </div>
+        <div class="form-group">
+            <label for="Rate">Tasa</label>
+            <input type="number" class="form-control" name="rate" [(ngModel)]="productService.selectedProduct.rate" #rate="ngModel" required
+                placeholder="Tasa">
+        </div>
+        <button type="submit" class="btn btn-default" (click)="CheckValidation(productForm)">Enviar</button>
+        <button type="submit" class="btn btn-default" (click)="resetForm(productForm)">Limpiar</button>
+        <button type="submit" class="btn btn-default pull-right" (click)="enableInitial()">Salir</button>
+    </form>
+    <button type="submit" class="btn btn-default pull-right" (click)="enableSearch()" *ngIf="initial">Buscar</button>
+    <button type="submit" class="btn btn-default pull-right" (click)="enableEdition()" *ngIf="initial">Editar</button>
+</div>
